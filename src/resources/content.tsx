@@ -2,21 +2,21 @@ import { About, Blog, Gallery, Home, Newsletter, Person, Social, Work } from "@/
 import { Line, Row, Text } from "@once-ui-system/core";
 
 const person: Person = {
-  firstName: "Selene",
-  lastName: "Yu",
-  name: `Selene Yu`,
-  role: "Design Engineer",
-  avatar: "/images/avatar.jpg",
-  email: "example@gmail.com",
-  location: "Asia/Jakarta", // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
-  languages: ["English", "Bahasa"], // optional: Leave the array empty if you don't want to display languages
-  locale: "en", // BCP 47 language tag for the HTML lang attribute, e.g., 'en', 'ja', 'zh-TW'
+  firstName: "Ange Fortune",
+  lastName: "Djiré",
+  name: `Djiré Ange Fortune`,
+  role: "Étudiant en Informatique",
+  avatar: "/images/avatar3.jpg",
+  email: "fortunedjire@gmail.com",
+  location: "Africa/Abidjan", // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
+  languages: ["Français", "Anglais"], // optional: Leave the array empty if you don't want to display languages
+  locale: "fr", // BCP 47 language tag for the HTML lang attribute, e.g., 'en', 'ja', 'zh-TW'
 };
 
 const newsletter: Newsletter = {
-  display: true,
-  title: <>Subscribe to {person.firstName}'s Newsletter</>,
-  description: <>My weekly newsletter about creativity and engineering</>,
+  display: false,
+  title: <>Abonnez-vous à la newsletter de {person.firstName}</>,
+  description: <>Mes actualités sur le développement web</>,
 };
 
 const social: Social = [
@@ -26,25 +26,19 @@ const social: Social = [
   {
     name: "GitHub",
     icon: "github",
-    link: "https://github.com/once-ui-system",
+    link: "https://github.com/FORTUNE2005",
     essential: true,
   },
   {
     name: "LinkedIn",
     icon: "linkedin",
-    link: "https://www.linkedin.com/company/once-ui/",
+    link: "https://www.linkedin.com/in/ange-fortune-djire-6241192a4",
     essential: true,
   },
   {
-    name: "Instagram",
-    icon: "instagram",
-    link: "https://www.instagram.com/once_ui/",
-    essential: false,
-  },
-  {
-    name: "Threads",
-    icon: "threads",
-    link: "https://www.threads.com/@once_ui",
+    name: "Téléphone",
+    icon: "phone",
+    link: "tel:+2250748552699",
     essential: true,
   },
   {
@@ -58,36 +52,37 @@ const social: Social = [
 const home: Home = {
   path: "/",
   image: "/images/og/home.jpg",
-  label: "Home",
-  title: `${person.name}'s Portfolio`,
-  description: `Portfolio website showcasing my work as a ${person.role}`,
-  headline: <>Building bridges between design and code</>,
+  label: "Accueil",
+  title: `Portfolio de ${person.name}`,
+  description: `Site portfolio de ${person.name}, ${person.role.toLowerCase()} à la recherche d'un stage`,
+  headline: <>Je développe des solutions web pour résoudre des problèmes concrets</>,
   featured: {
     display: true,
     title: (
       <Row gap="12" vertical="center">
-        <strong className="ml-4">Once UI</strong>{" "}
+        <strong className="ml-4">Gestion des ONG</strong>{" "}
         <Line background="brand-alpha-strong" vert height="20" />
         <Text marginRight="4" onBackground="brand-medium">
-          Featured work
+          Projet personnel
         </Text>
       </Row>
     ),
-    href: "/work/building-once-ui-a-customizable-design-system",
+    href: "/work/ong-management-platform",
   },
   subline: (
     <>
-      I'm {person.firstName}, a {person.role.toLowerCase()} at{" "}
-      <Text as="span" size="xl" weight="strong">ONCE UI</Text>, where I craft intuitive <br /> user experiences. After hours, I build my own projects.
+      Je suis {person.firstName}, étudiant en Licence 3 MIAGE à l'Université Félix Houphouët-Boigny.
+      Motivé, curieux et autonome, je recherche un <br /> stage en informatique pour mettre à profit
+      mes compétences en développement web.
     </>
   ),
 };
 
 const about: About = {
   path: "/about",
-  label: "About",
-  title: `About – ${person.name}`,
-  description: `Meet ${person.name}, ${person.role} from ${person.location}`,
+  label: "À propos",
+  title: `À propos – ${person.name}`,
+  description: `En savoir plus sur ${person.name}, ${person.role.toLowerCase()} à Abidjan`,
   tableOfContent: {
     display: true,
     subItems: false,
@@ -96,7 +91,7 @@ const about: About = {
     display: true,
   },
   calendar: {
-    display: true,
+    display: false,
     link: "https://cal.com",
   },
   intro: {
@@ -104,129 +99,118 @@ const about: About = {
     title: "Introduction",
     description: (
       <>
-        {person.firstName} is a {person.location.split("/")[1]?.replace("_", " ")}-based {person.role.toLowerCase()} with a passion for transforming complex challenges
-        into simple, elegant design solutions. Their work spans digital interfaces, interactive
-        experiences, and the convergence of design and technology.
+        {person.firstName} est étudiant en Licence 3 MIAGE à l'Université Félix Houphouët-Boigny
+        (Abidjan, Côte d'Ivoire), passionné par le développement web, les nouvelles technologies et
+        la veille numérique. Motivé, curieux et autonome, il développe ses compétences en analyse,
+        développement et gestion de projets informatiques, avec l'objectif de contribuer à des
+        projets concrets au sein d'une équipe.
       </>
     ),
   },
   work: {
-    display: true, // set to false to hide this section
-    title: "Work Experience",
-    experiences: [
-      {
-        company: "FLY",
-        timeframe: "2022 - Present",
-        role: "Senior Design Engineer",
-        achievements: [
-          <>
-            Redesigned the UI/UX for the FLY platform, resulting in a 20% increase in user
-            engagement and 30% faster load times.
-          </>,
-          <>
-            Spearheaded the integration of AI tools into design workflows, enabling designers to
-            iterate 50% faster.
-          </>,
-        ],
-        images: [
-          // optional: leave the array empty if you don't want to display images
-          {
-            src: "/images/projects/project-01/cover-01.jpg",
-            alt: "Once UI Project",
-            width: 16,
-            height: 9,
-          },
-        ],
-      },
-      {
-        company: "Creativ3",
-        timeframe: "2018 - 2022",
-        role: "Lead Designer",
-        achievements: [
-          <>
-            Developed a design system that unified the brand across multiple platforms, improving
-            design consistency by 40%.
-          </>,
-          <>
-            Led a cross-functional team to launch a new product line, contributing to a 15% increase
-            in overall company revenue.
-          </>,
-        ],
-        images: [],
-      },
-    ],
+    display: false, // set to false to hide this section
+    title: "Expérience professionnelle",
+    experiences: [],
   },
   studies: {
     display: true, // set to false to hide this section
-    title: "Studies",
+    title: "Formation",
     institutions: [
       {
-        name: "University of Jakarta",
-        description: <>Studied software engineering.</>,
+        name: "Licence 3 MIAGE",
+        description: (
+          <>
+            2025 – En cours · Université Félix Houphouët-Boigny (UFHB) — Abidjan · Méthodes
+            Informatiques Appliquées à la Gestion des Entreprises
+          </>
+        ),
       },
       {
-        name: "Build the Future",
-        description: <>Studied online marketing and personal branding.</>,
+        name: "Licence 2 MIAGE",
+        description: <>2024 – 2025 · Université Félix Houphouët-Boigny (UFHB) — Abidjan</>,
+      },
+      {
+        name: "Licence 1 MIAGE",
+        description: <>2023 – 2024 · Université Félix Houphouët-Boigny (UFHB) — Abidjan</>,
+      },
+      {
+        name: "Baccalauréat",
+        description: <>2022 – 2023 · Côte d'Ivoire</>,
       },
     ],
   },
   technical: {
     display: true, // set to false to hide this section
-    title: "Technical skills",
+    title: "Compétences techniques",
     skills: [
       {
-        title: "Figma",
-        description: (
-          <>Able to prototype in Figma with Once UI with unnatural speed.</>
-        ),
+        title: "Développement web",
+        description: <>Création d'interfaces web et d'applications full-stack.</>,
         tags: [
           {
-            name: "Figma",
-            icon: "figma",
-          },
-        ],
-        // optional: leave the array empty if you don't want to display images
-        images: [
-          {
-            src: "/images/projects/project-01/cover-02.jpg",
-            alt: "Project image",
-            width: 16,
-            height: 9,
+            name: "HTML",
+            icon: "html",
           },
           {
-            src: "/images/projects/project-01/cover-03.jpg",
-            alt: "Project image",
-            width: 16,
-            height: 9,
+            name: "CSS",
+            icon: "css",
+          },
+          {
+            name: "React",
+            icon: "react",
+          },
+          {
+            name: "PHP",
+            icon: "php",
+          },
+          {
+            name: "Laravel",
+            icon: "laravel",
           },
         ],
       },
       {
-        title: "Next.js",
-        description: (
-          <>Building next gen apps with Next.js + Once UI + Supabase.</>
-        ),
+        title: "Programmation",
+        description: <>Java — notions.</>,
         tags: [
           {
-            name: "JavaScript",
-            icon: "javascript",
-          },
-          {
-            name: "Next.js",
-            icon: "nextjs",
-          },
-          {
-            name: "Supabase",
-            icon: "supabase",
+            name: "Java",
+            icon: "java",
           },
         ],
-        // optional: leave the array empty if you don't want to display images
-        images: [
+      },
+      {
+        title: "Bases de données",
+        description: <>Conception et manipulation de bases de données relationnelles.</>,
+        tags: [
           {
-            src: "/images/projects/project-01/cover-04.jpg",
-            alt: "Project image",
-            width: 16,
-            height: 9,
+            name: "SQL",
+          },
+          {
+            name: "MySQL",
+            icon: "mysql",
+          },
+        ],
+      },
+      {
+        title: "Bureautique",
+        description: <>Outils bureautiques et création de contenus visuels.</>,
+        tags: [
+          {
+            name: "Word",
+            icon: "document",
+          },
+          {
+            name: "Excel",
+            icon: "excel",
+          },
+          {
+            name: "PowerPoint",
+            icon: "powerpoint",
+          },
+          {
+            name: "Canva",
+            icon: "canva",
           },
         ],
       },
@@ -237,70 +221,27 @@ const about: About = {
 const blog: Blog = {
   path: "/blog",
   label: "Blog",
-  title: "Writing about design and tech...",
-  description: `Read what ${person.name} has been up to recently`,
+  title: "Écrire sur le développement web...",
+  description: `Lire les articles de ${person.name}`,
   // Create new blog posts by adding a new .mdx file to app/blog/posts
   // All posts will be listed on the /blog route
 };
 
 const work: Work = {
   path: "/work",
-  label: "Work",
-  title: `Projects – ${person.name}`,
-  description: `Design and dev projects by ${person.name}`,
-  // Create new project pages by adding a new .mdx file to app/blog/posts
+  label: "Projets",
+  title: `Projets – ${person.name}`,
+  description: `Projets de développement web réalisés par ${person.name}`,
+  // Create new project pages by adding a new .mdx file to app/work/projects
   // All projects will be listed on the /home and /work routes
 };
 
 const gallery: Gallery = {
   path: "/gallery",
-  label: "Gallery",
-  title: `Photo gallery – ${person.name}`,
-  description: `A photo collection by ${person.name}`,
-  // Images by https://lorant.one
-  // These are placeholder images, replace with your own
-  images: [
-    {
-      src: "/images/gallery/horizontal-1.jpg",
-      alt: "image",
-      orientation: "horizontal",
-    },
-    {
-      src: "/images/gallery/vertical-4.jpg",
-      alt: "image",
-      orientation: "vertical",
-    },
-    {
-      src: "/images/gallery/horizontal-3.jpg",
-      alt: "image",
-      orientation: "horizontal",
-    },
-    {
-      src: "/images/gallery/vertical-1.jpg",
-      alt: "image",
-      orientation: "vertical",
-    },
-    {
-      src: "/images/gallery/vertical-2.jpg",
-      alt: "image",
-      orientation: "vertical",
-    },
-    {
-      src: "/images/gallery/horizontal-2.jpg",
-      alt: "image",
-      orientation: "horizontal",
-    },
-    {
-      src: "/images/gallery/horizontal-4.jpg",
-      alt: "image",
-      orientation: "horizontal",
-    },
-    {
-      src: "/images/gallery/vertical-3.jpg",
-      alt: "image",
-      orientation: "vertical",
-    },
-  ],
+  label: "Galerie",
+  title: `Galerie photos – ${person.name}`,
+  description: `Une collection de photos par ${person.name}`,
+  images: [],
 };
 
 export { person, social, newsletter, home, about, blog, work, gallery };
