@@ -13,7 +13,7 @@ import {
 import { home, person, social } from "./content";
 
 // IMPORTANT: Replace with your own domain address - it's used for SEO in meta tags and schema
-const baseURL: string = "https://fortunedjire.vercel.app";
+const baseURL: string = "https://djirefortuneportfolio.vercel.app";
 
 const routes: RoutesConfig = {
   "/": true,
