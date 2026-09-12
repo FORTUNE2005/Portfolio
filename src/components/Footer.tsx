@@ -1,47 +1,26 @@
-import { Row, IconButton, Text } from "@once-ui-system/core";
-import { person, social } from "@/resources";
-import styles from "./Footer.module.scss";
+import Image from "next/image";
+import { person } from "@/resources/content";
 
-export const Footer = () => {
-  const currentYear = new Date().getFullYear();
-
+export default function Footer() {
   return (
-    <Row as="footer" fillWidth padding="8" horizontal="center" s={{ direction: "column" }}>
-      <Row
-        className={styles.mobile}
-        maxWidth="m"
-        paddingY="8"
-        paddingX="16"
-        gap="16"
-        horizontal="between"
-        vertical="center"
-        s={{
-          direction: "column",
-          horizontal: "center",
-          align: "center",
-        }}
-      >
-        <Text variant="body-default-s" onBackground="neutral-strong">
-          <Text onBackground="neutral-weak">© {currentYear} /</Text>
-          <Text paddingX="4">{person.name}</Text>
-        </Text>
-        <Row gap="16">
-          {social.map(
-            (item) =>
-              item.link && (
-                <IconButton
-                  key={item.name}
-                  href={item.link}
-                  icon={item.icon}
-                  tooltip={item.name}
-                  size="s"
-                  variant="ghost"
-                />
-              ),
-          )}
-        </Row>
-      </Row>
-      <Row height="80" hide s={{ hide: false }} />
-    </Row>
+    <footer className="mx-auto mt-6 flex max-w-[1380px] flex-wrap items-center justify-between gap-4 px-2 pb-4 text-sm font-medium text-ink/70">
+      <p>&copy; {new Date().getFullYear()} {person.name} — le CodeurFortune</p>
+      <p className="flex items-center gap-2">
+        Codé avec
+        <Image
+          src="/favicon.ico"
+          alt="Fortune logo"
+          width={16}
+          height={16}
+          className="size-4"
+        />
+      </p>
+      <a href="#top" className="inline-flex items-center gap-1.5 hover:text-ink">
+        Retour en haut
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-3.5 -rotate-45">
+          <path d="M5 12h14M12 5l7 7" />
+        </svg>
+      </a>
+    </footer>
   );
-};
+}

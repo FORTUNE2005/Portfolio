@@ -1,90 +1,55 @@
 "use client";
 
-import {
-  AvatarGroup,
-  Carousel,
-  Column,
-  Flex,
-  Heading,
-  SmartLink,
-  Text,
-} from "@once-ui-system/core";
+import Image from "next/image";
 
-interface ProjectCardProps {
-  href: string;
-  priority?: boolean;
-  images: string[];
+interface Project {
+  id: number;
   title: string;
-  content: string;
   description: string;
-  avatars: { src: string }[];
+  tags: string[];
+  category: string;
+  image: string;
   link: string;
 }
 
-export const ProjectCard: React.FC<ProjectCardProps> = ({
-  href,
-  images = [],
-  title,
-  content,
-  description,
-  avatars,
-  link,
-}) => {
+export default function ProjectCard({ project }: { project: Project }) {
   return (
-    <Column fillWidth gap="m">
-      <Carousel
-        sizes="(max-width: 960px) 100vw, 960px"
-        items={images.map((image) => ({
-          slide: image,
-          alt: title,
-        }))}
-      />
-      <Flex
-        s={{ direction: "column" }}
-        fillWidth
-        paddingX="s"
-        paddingTop="12"
-        paddingBottom="24"
-        gap="l"
-      >
-        {title && (
-          <Flex flex={5}>
-            <Heading as="h2" wrap="balance" variant="heading-strong-xl">
-              {title}
-            </Heading>
-          </Flex>
-        )}
-        {(avatars?.length > 0 || description?.trim() || content?.trim()) && (
-          <Column flex={7} gap="16">
-            {avatars?.length > 0 && <AvatarGroup avatars={avatars} size="m" reverse />}
-            {description?.trim() && (
-              <Text wrap="balance" variant="body-default-s" onBackground="neutral-weak">
-                {description}
-              </Text>
-            )}
-            <Flex gap="24" wrap>
-              {content?.trim() && (
-                <SmartLink
-                  suffixIcon="arrowRight"
-                  style={{ margin: "0", width: "fit-content" }}
-                  href={href}
-                >
-                  <Text variant="body-default-s">Étude de cas</Text>
-                </SmartLink>
-              )}
-              {link && (
-                <SmartLink
-                  suffixIcon="arrowUpRightFromSquare"
-                  style={{ margin: "0", width: "fit-content" }}
-                  href={link}
-                >
-                  <Text variant="body-default-s">Voir le projet</Text>
-                </SmartLink>
-              )}
-            </Flex>
-          </Column>
-        )}
-      </Flex>
-    </Column>
+    <a
+      href={project.link}
+      target="_blank"
+      rel="noreferrer"
+      className="block group"
+    >
+      <div className="relative aspect-[3/2] overflow-hidden rounded-xl bg-ink">
+        <Image
+          src={project.image}
+          alt={project.title}
+          fill
+          className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.06]"
+          sizes="(max-width: 768px) 100vw, 600px"
+        />
+        <span className="absolute left-3 top-3 rounded-full bg-white px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-ink">
+          {project.category === "real" ? "Projet réel" : "Exploration"}
+        </span>
+      </div>
+      <div className="px-2 pb-3 pt-5">
+        <h3 className="text-xl font-medium leading-snug tracking-tight md:text-[1.6rem]">
+          {project.title}
+        </h3>
+        <p className="mt-2 line-clamp-2 text-[15px] text-muted">
+          {project.description}
+        </p>
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          {project.tags.map((tag) => (
+            <span
+              key={tag}
+              className="rounded-full bg-ink/5 px-2.5 py-1 text-xs font-medium text-ink/70"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+    </a>
   );
-};
+}
