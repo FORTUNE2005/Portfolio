@@ -32,7 +32,7 @@ export default function Contact() {
               <path d="M7 17 17 7M8 7h9v9" />
             </svg>
           </a>
-          <a href="#top" className="pill px-7 py-4 text-base font-semibold transition hover:bg-ink hover:text-white">
+          <a href="#rdv" className="pill px-7 py-4 text-base font-semibold transition hover:bg-ink hover:text-white">
             Réserver un appel
           </a>
         </div>
