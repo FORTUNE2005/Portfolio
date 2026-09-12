@@ -3,7 +3,7 @@ export const person = {
   lastName: "Djire",
   name: "Djire Ange Fortune",
   role: "Développeur Web & Étudiant en Informatique",
-  avatar: "/images/avatar3.jpg",
+  avatar: "/images/og/home.jpg",
   heroImage: "/images/image 1 couleur.png",
   heroImageBw: "/images/image 1 couleur noir.png",
   email: "fortunedjire@gmail.com",
