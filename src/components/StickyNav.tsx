@@ -45,9 +45,26 @@ export default function StickyNav() {
           ))}
         </ul>
 
+        <ul className="flex items-center gap-1 md:hidden">
+          {[
+            { label: "Projets", href: "#projets" },
+            { label: "Compétences", href: "#competences" },
+            { label: "Expérience", href: "#experience" },
+          ].map((item) => (
+            <li key={item.href}>
+              <a
+                href={item.href}
+                className="rounded-full px-3 py-1.5 text-xs font-medium text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+              >
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+
         <a
           href="#rdv"
-          className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-ink transition-transform hover:-translate-y-0.5"
+          className="hidden rounded-full bg-white px-4 py-2 text-sm font-semibold text-ink transition-transform hover:-translate-y-0.5 md:inline-flex"
         >
           RDV
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-1 inline-block size-3.5">

@@ -69,7 +69,7 @@ export default function Hero() {
           {/* Name */}
           <h1
             className="relative z-10 mt-4 flex justify-center select-none whitespace-nowrap px-2 font-display font-bold leading-[0.88] tracking-[-0.01em]"
-            style={{ fontSize: "clamp(2.5rem, 14vw, 5rem)" }}
+            style={{ fontSize: "clamp(2.5rem, 12vw, 5rem)" }}
             aria-label="FORTUNE DJIRE"
           >
             <span className="text-outline">
