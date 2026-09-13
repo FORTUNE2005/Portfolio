@@ -80,7 +80,7 @@ export const projects = [
     tags: ["PHP", "Laravel", "MySQL", "Bootstrap"],
     category: "exploration",
     image: "/images/projects/ong/01-accueil.png",
-    link: "#projets-exploration",
+    link: "#projets",
   },
   {
     id: 3,
@@ -90,7 +90,7 @@ export const projects = [
     tags: ["Java", "JavaFX", "MySQL", "JDBC"],
     category: "exploration",
     image: "/images/projects/clinique/imageproject5.png",
-    link: "#projets-exploration",
+    link: "#projets",
   },
 ];
 

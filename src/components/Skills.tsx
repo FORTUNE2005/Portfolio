@@ -26,12 +26,11 @@ export default function Skills() {
                     <h3 className="section-title text-[clamp(1.9rem,5.4vw,4.2rem)] lg:max-w-[56%]">
                       {category.category}
                     </h3>
-                    <div className="max-w-md overflow-hidden pt-5">
-                      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+                    <div className="overflow-hidden pt-5">
+                      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                         {category.items.map((skill) => (
                           <div key={skill.name} className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2">
                             <span className="text-sm font-medium">{skill.name}</span>
-                            <span className="font-mono text-xs text-white/40">{skill.level}%</span>
                           </div>
                         ))}
                       </div>

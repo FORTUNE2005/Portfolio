@@ -104,6 +104,7 @@ export default function Projects() {
                 href={project.link} 
                 target={project.category === "real" ? "_blank" : "_self"} 
                 rel={project.category === "real" ? "noreferrer" : undefined}
+                onClick={project.category !== "real" ? (e) => { e.preventDefault(); document.querySelector("#projets")?.scrollIntoView({ behavior: "smooth" }); } : undefined}
                 className="block"
               >
                 <div className="relative aspect-[3/2] overflow-hidden rounded-xl bg-ink">
