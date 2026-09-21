@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 const MONTHS = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
 
@@ -17,7 +17,12 @@ const TIME_SLOTS_WEEKDAY = ["09:00","09:30","10:00","10:30","11:00","11:30","14:
 const TIME_SLOTS_SATURDAY = ["09:00","09:30","10:00","10:30","11:00","11:30","12:00","12:30"];
 
 export default function Booking() {
-  const now = new Date();
+  const [now, setNow] = useState(new Date());
+  useEffect(() => {
+    setNow(new Date());
+    const timer = setInterval(() => setNow(new Date()), 60000);
+    return () => clearInterval(timer);
+  }, []);
   const [year, setYear] = useState(now.getFullYear());
   const [month, setMonth] = useState(now.getMonth());
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
@@ -83,14 +88,28 @@ export default function Booking() {
   const isAvailable = (day: number) => {
     if (year < now.getFullYear()) return false;
     if (year === now.getFullYear() && month < now.getMonth()) return false;
-    if (year === now.getFullYear() && month === now.getMonth() && day <= now.getDate()) return false;
+    if (year === now.getFullYear() && month === now.getMonth() && day < now.getDate()) return false;
     const dayOfWeek = new Date(year, month, day).getDay();
     return dayOfWeek !== 0;
   };
 
+  const isToday = (day: number) => {
+    return year === now.getFullYear() && month === now.getMonth() && day === now.getDate();
+  };
+
   const isSaturday = (day: number) => new Date(year, month, day).getDay() === 6;
 
-  const timeSlots = selectedDay && isSaturday(selectedDay) ? TIME_SLOTS_SATURDAY : TIME_SLOTS_WEEKDAY;
+  const availableTimeSlots = useMemo(() => {
+    if (!selectedDay) return [];
+    const baseSlots = isSaturday(selectedDay) ? TIME_SLOTS_SATURDAY : TIME_SLOTS_WEEKDAY;
+    if (!isToday(selectedDay)) return baseSlots;
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+    return baseSlots.filter(time => {
+      const [h, m] = time.split(":").map(Number);
+      return h > currentHour || (h === currentHour && m > currentMinute);
+    });
+  }, [selectedDay, now]);
 
   return (
     <section id="rdv" className="relative px-3 py-24 md:px-6 md:py-32">
@@ -135,7 +154,6 @@ export default function Booking() {
                 const day = i + 1;
                 const available = isAvailable(day);
                 const isSelected = selectedDay === day;
-                const isPast = !available && (year < now.getFullYear() || (year === now.getFullYear() && (month < now.getMonth() || (month === now.getMonth() && day <= now.getDate()))));
 
                 return (
                   <button
@@ -143,7 +161,7 @@ export default function Booking() {
                     onClick={() => { if (available) { setSelectedDay(day); setSelectedTime(null); } }}
                     disabled={!available}
                     className={`relative aspect-square rounded-xl text-[15px] font-semibold transition
-                      ${isSelected ? "bg-ink text-white shadow-lg" : available ? "text-ink hover:bg-ink/10 cursor-pointer" : "text-ink/25"}
+                      ${isSelected ? "bg-ink text-white shadow-lg" : available ? "text-ink hover:bg-ink/10 cursor-pointer" : "text-ink/25 cursor-not-allowed opacity-40"}
                     `}
                   >
                     {day}
@@ -162,8 +180,14 @@ export default function Booking() {
               <div className="rounded-3xl border border-line bg-white p-6 shadow-[0_20px_50px_-30px_rgb(0_0_0/0.15)]">
                 <p className="text-lg font-bold">Créneaux disponibles</p>
                 <p className="mt-1 text-sm text-muted">{selectedDay} {MONTHS[month]} {year}</p>
+                {availableTimeSlots.length === 0 ? (
+                  <div className="mt-6 rounded-xl bg-ink/5 p-6 text-center">
+                    <p className="text-sm text-muted">Plus de créneaux disponibles pour aujourd'hui.</p>
+                    <p className="mt-1 text-xs text-muted/70">Reviens demain pour réserver un créneau.</p>
+                  </div>
+                ) : (
                 <div className="mt-6 grid grid-cols-3 gap-2 md:grid-cols-4">
-                  {timeSlots.map((time) => (
+                  {availableTimeSlots.map((time) => (
                     <button
                       key={time}
                       onClick={() => setSelectedTime(time)}
@@ -178,6 +202,7 @@ export default function Booking() {
                     </button>
                   ))}
                 </div>
+                )}
                 {selectedTime && (
                   <div className="mt-6 space-y-5">
                     {/* Name + Email side by side */}
