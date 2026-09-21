@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
+import emailjs from "@emailjs/browser";
 
 const MONTHS = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
 
@@ -15,6 +16,10 @@ function getFirstDayOfWeek(year: number, month: number) {
 
 const TIME_SLOTS_WEEKDAY = ["09:00","09:30","10:00","10:30","11:00","11:30","14:00","14:30","15:00","15:30","16:00","16:30"];
 const TIME_SLOTS_SATURDAY = ["09:00","09:30","10:00","10:30","11:00","11:30","12:00","12:30"];
+
+const DAYS_FR = ["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"];
+
+const WHATSAPP_PHONE = "2250748552599";
 
 export default function Booking() {
   const [now, setNow] = useState(new Date());
@@ -37,6 +42,8 @@ export default function Booking() {
     name: false,
     email: false
   });
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const daysInMonth = useMemo(() => getDaysInMonth(year, month), [year, month]);
   const firstDay = useMemo(() => getFirstDayOfWeek(year, month), [year, month]);
@@ -57,7 +64,6 @@ export default function Booking() {
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    // Effacer l'erreur quand l'utilisateur tape
     if (field === "name" || field === "email") {
       setErrors(prev => ({ ...prev, [field]: false }));
     }
@@ -77,12 +83,48 @@ export default function Booking() {
     return emailRegex.test(email);
   };
 
-  const handleSubmit = () => {
-    if (!validateForm()) {
-      return;
+  const handleSubmit = async () => {
+    if (!validateForm() || !selectedDay || !selectedTime) return;
+
+    setSubmitting(true);
+
+    const dayName = DAYS_FR[new Date(year, month, selectedDay).getDay()];
+    const dateStr = `${dayName} ${selectedDay} ${MONTHS[month]} ${year} a ${selectedTime}`;
+    const projetStr = formData.projectType || "Non precise";
+    const descStr = formData.description || "Aucune";
+
+    try {
+      await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+        {
+          from_name: formData.name,
+          from_email: formData.email,
+          project_type: projetStr,
+          date: dateStr,
+          description: descStr,
+          to_name: "Fortune",
+        },
+        { publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY! }
+      );
+
+      const waMessage = encodeURIComponent(
+        `Bonjour Fortune, je suis ${formData.name}.\n\nJe reserve un appel pour : *${projetStr}*\n\n📅 ${dateStr}\n\n${descStr !== "Aucune" ? descStr : ""}`
+      );
+      window.open(`https://wa.me/${WHATSAPP_PHONE}?text=${waMessage}`, "_blank");
+
+      setSubmitted(true);
+      setFormData({ name: "", email: "", projectType: "", description: "" });
+      setSelectedDay(null);
+      setSelectedTime(null);
+
+      setTimeout(() => setSubmitted(false), 5000);
+    } catch (err) {
+      console.error("Erreur envoi:", err);
+      alert("Une erreur est survenue. Reessayez plus tard.");
+    } finally {
+      setSubmitting(false);
     }
-    // Logique de soumission du formulaire
-    console.log("Formulaire valide:", { formData, selectedDay, selectedTime });
   };
 
   const isAvailable = (day: number) => {
@@ -176,7 +218,15 @@ export default function Booking() {
 
           {/* Time slots */}
           <div className="min-h-[380px]">
-            {selectedDay ? (
+            {submitted ? (
+              <div className="grid h-full min-h-[380px] place-items-center rounded-3xl border border-ok/30 bg-ok/5 p-8 text-center">
+                <div>
+                  <p className="text-5xl">✅</p>
+                  <p className="mt-4 text-lg font-semibold text-ok">RDV bien recu !</p>
+                  <p className="mt-1 text-sm text-muted">Tu recevras un email de confirmation. A bientot !</p>
+                </div>
+              </div>
+            ) : selectedDay ? (
               <div className="rounded-3xl border border-line bg-white p-6 shadow-[0_20px_50px_-30px_rgb(0_0_0/0.15)]">
                 <p className="text-lg font-bold">Créneaux disponibles</p>
                 <p className="mt-1 text-sm text-muted">{selectedDay} {MONTHS[month]} {year}</p>
@@ -205,7 +255,6 @@ export default function Booking() {
                 )}
                 {selectedTime && (
                   <div className="mt-6 space-y-5">
-                    {/* Name + Email side by side */}
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                       <div>
                         <input 
@@ -239,7 +288,6 @@ export default function Booking() {
                       </div>
                     </div>
 
-                    {/* Project type pills */}
                     <div className="flex flex-wrap gap-2">
                       {["Projet web", "Dev front"].map((type) => (
                         <button
@@ -257,7 +305,6 @@ export default function Booking() {
                       ))}
                     </div>
 
-                    {/* Description */}
                     <textarea 
                       rows={3} 
                       value={formData.description}
@@ -266,14 +313,18 @@ export default function Booking() {
                       className="w-full rounded-xl border border-line px-4 py-3 text-sm outline-none transition placeholder:text-muted/50 focus:border-ink" 
                     />
 
-                    {/* Submit */}
                     <button 
                       type="button"
                       onClick={handleSubmit}
-                      className="btn-dark w-full justify-center px-6 py-3.5 text-[15px] font-medium"
+                      disabled={submitting}
+                      className="btn-dark w-full justify-center px-6 py-3.5 text-[15px] font-medium disabled:opacity-50"
                     >
-                      Réserver le {["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi"][new Date(year, month, selectedDay).getDay()]} {selectedDay} {MONTHS[month]} à {selectedTime}
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="size-4"><path d="M7 17 17 7M8 7h9v9" /></svg>
+                      {submitting ? "Envoi en cours..." : (
+                        <>
+                          Réserver le {DAYS_FR[new Date(year, month, selectedDay).getDay()]} {selectedDay} {MONTHS[month]} à {selectedTime}
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="size-4"><path d="M7 17 17 7M8 7h9v9" /></svg>
+                        </>
+                      )}
                     </button>
                   </div>
                 )}
