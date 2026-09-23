@@ -21,6 +21,10 @@ const DAYS_FR = ["Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samed
 
 const WHATSAPP_PHONE = "2250748552599";
 
+const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "";
+const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "";
+const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "";
+
 export default function Booking() {
   const [now, setNow] = useState(new Date());
   useEffect(() => {
@@ -44,6 +48,7 @@ export default function Booking() {
   });
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: "error" | "success" } | null>(null);
 
   const daysInMonth = useMemo(() => getDaysInMonth(year, month), [year, month]);
   const firstDay = useMemo(() => getFirstDayOfWeek(year, month), [year, month]);
@@ -86,6 +91,12 @@ export default function Booking() {
   const handleSubmit = async () => {
     if (!validateForm() || !selectedDay || !selectedTime) return;
 
+    if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY) {
+      setToast({ message: "Configuration manquante. Contacte-moi directement par email.", type: "error" });
+      setTimeout(() => setToast(null), 5000);
+      return;
+    }
+
     setSubmitting(true);
 
     const dayName = DAYS_FR[new Date(year, month, selectedDay).getDay()];
@@ -95,8 +106,8 @@ export default function Booking() {
 
     try {
       await emailjs.send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
         {
           from_name: formData.name,
           from_email: formData.email,
@@ -105,13 +116,13 @@ export default function Booking() {
           description: descStr,
           to_name: "Fortune",
         },
-        { publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY! }
+        { publicKey: EMAILJS_PUBLIC_KEY }
       );
 
       const waMessage = encodeURIComponent(
         `Bonjour Fortune, je suis ${formData.name}.\n\nJe reserve un appel pour : *${projetStr}*\n\n📅 ${dateStr}\n\n${descStr !== "Aucune" ? descStr : ""}`
       );
-      window.open(`https://wa.me/${WHATSAPP_PHONE}?text=${waMessage}`, "_blank");
+      window.open(`https://wa.me/${WHATSAPP_PHONE}?text=${waMessage}`, "_blank", "noopener,noreferrer");
 
       setSubmitted(true);
       setFormData({ name: "", email: "", projectType: "", description: "" });
@@ -120,8 +131,8 @@ export default function Booking() {
 
       setTimeout(() => setSubmitted(false), 5000);
     } catch (err) {
-      console.error("Erreur envoi:", err);
-      alert("Une erreur est survenue. Reessayez plus tard.");
+      setToast({ message: "Une erreur est survenue. Reessayez plus tard.", type: "error" });
+      setTimeout(() => setToast(null), 5000);
     } finally {
       setSubmitting(false);
     }
@@ -156,6 +167,12 @@ export default function Booking() {
   return (
     <section id="rdv" className="relative px-3 py-24 md:px-6 md:py-32">
       <div className="mx-auto max-w-[1280px] rounded-[14px] border border-white/60 bg-white/65 px-5 py-14 shadow-[0_30px_80px_-30px_rgb(0_0_0/0.3)] backdrop-blur-2xl md:px-14 md:py-20">
+
+        {toast && (
+          <div className={`fixed bottom-6 right-6 z-50 rounded-xl px-5 py-3 text-sm font-medium shadow-lg transition-all ${toast.type === "error" ? "bg-red-500 text-white" : "bg-ok text-white"}`}>
+            {toast.message}
+          </div>
+        )}
 
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>

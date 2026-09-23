@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import { Poppins } from "next/font/google";
 import { JetBrains_Mono } from "next/font/google";
+import LoadingScreen from "@/components/LoadingScreen";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -41,7 +42,10 @@ export default function RootLayout({
       lang="fr"
       className={`${manrope.variable} ${poppins.variable} ${jetbrains.variable} antialiased`}
     >
-      <body className="min-h-screen">{children}</body>
+      <body className="min-h-screen">
+        <LoadingScreen />
+        {children}
+      </body>
     </html>
   );
 }

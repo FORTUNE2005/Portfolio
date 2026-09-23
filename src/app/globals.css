@@ -32,6 +32,11 @@
     70% { box-shadow: 0 0 0 10px rgba(63, 181, 107, 0); }
     100% { box-shadow: 0 0 6px rgba(63, 181, 107, 0); }
   }
+
+  @keyframes page-in {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
 }
 
 html {

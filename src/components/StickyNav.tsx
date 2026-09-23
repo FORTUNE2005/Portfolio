@@ -4,12 +4,46 @@ import { useEffect, useState } from "react";
 
 export default function StickyNav() {
   const [visible, setVisible] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
 
   useEffect(() => {
     const onScroll = () => setVisible(window.scrollY > window.innerHeight * 0.8);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    const sections = ["projets", "competences", "experience", "contact"];
+    const observers: IntersectionObserver[] = [];
+
+    sections.forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setActiveSection(id);
+            }
+          });
+        },
+        { threshold: 0.3, rootMargin: "-80px 0px 0px 0px" }
+      );
+
+      observer.observe(el);
+      observers.push(observer);
+    });
+
+    return () => observers.forEach((o) => o.disconnect());
+  }, []);
+
+  const navItems = [
+    { label: "Projets", href: "#projets", id: "projets" },
+    { label: "Competences", href: "#competences", id: "competences" },
+    { label: "Experience", href: "#experience", id: "experience" },
+    { label: "Contact", href: "#contact", id: "contact" },
+  ];
 
   return (
     <div
@@ -28,16 +62,15 @@ export default function StickyNav() {
         </a>
 
         <ul className="hidden items-center gap-1 md:flex">
-          {[
-            { label: "Projets", href: "#projets" },
-            { label: "Compétences", href: "#competences" },
-            { label: "Expérience", href: "#experience" },
-            { label: "Contact", href: "#contact" },
-          ].map((item) => (
+          {navItems.map((item) => (
             <li key={item.href}>
               <a
                 href={item.href}
-                className="rounded-full px-4 py-2 text-sm font-medium text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+                className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                  activeSection === item.id
+                    ? "bg-white/15 text-white"
+                    : "text-white/70 hover:bg-white/10 hover:text-white"
+                }`}
               >
                 {item.label}
               </a>
@@ -46,15 +79,15 @@ export default function StickyNav() {
         </ul>
 
         <ul className="flex items-center gap-1 md:hidden">
-          {[
-            { label: "Projets", href: "#projets" },
-            { label: "Compétences", href: "#competences" },
-            { label: "Expérience", href: "#experience" },
-          ].map((item) => (
+          {navItems.map((item) => (
             <li key={item.href}>
               <a
                 href={item.href}
-                className="rounded-full px-3 py-1.5 text-xs font-medium text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+                className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
+                  activeSection === item.id
+                    ? "bg-white/15 text-white"
+                    : "text-white/70 hover:bg-white/10 hover:text-white"
+                }`}
               >
                 {item.label}
               </a>

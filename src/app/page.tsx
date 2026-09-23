@@ -10,7 +10,7 @@ import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <main>
+    <main className="animate-[page-in_0.8s_ease-out_0.5s_both]">
       <StickyNav />
       <Hero />
       <Marquee />
