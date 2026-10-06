@@ -55,6 +55,7 @@ export const stack = [
   "PHP",
   "Laravel",
   "Java",
+  "Python",
   "SQL",
   "MySQL",
   "Git",
