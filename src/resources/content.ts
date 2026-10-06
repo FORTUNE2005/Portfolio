@@ -134,7 +134,10 @@ export const skills = [
   },
   {
     category: "Programmation",
-    items: [{ name: "Java", level: 50 }],
+    items: [
+      { name: "Java", level: 50 },
+      { name: "Python", level: 60 },
+    ],
   },
   {
     category: "Bases de données",
